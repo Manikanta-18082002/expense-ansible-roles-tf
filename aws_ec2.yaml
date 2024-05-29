@@ -1,0 +1,21 @@
+# This file name should be this: aws_ec2.yaml
+#Like Inventory File
+
+plugin: amazon.aws.aws_ec2 # Ansible takes this plugin and connect to AWS
+regions:
+- us-east-1
+
+keyed_groups:
+- key: tags['Name']
+  prefix: ''
+  parent_proup: ''
+# Till above it takes all instances with Name
+
+filters:
+  tag:Name: "backend*"
+
+compose:
+  #This sets the ansible_host variable to connect with IP Address with out changing the hostname
+  ansible_host: private_ip_address
+
+  # Till here get all private ip address of ALL servers with name backend in us-east-1 region

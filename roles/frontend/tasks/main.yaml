@@ -1,0 +1,50 @@
+- name: install nginx server
+  ansible.builtin.dnf:
+    name: nginx
+    state: latest
+
+- name: start and enable nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+#Instead of 4 modules: delete existing directory, create new directory, download code, extract code
+# Use below 1 module 
+- name: run app pre-requisites
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: app-pre-req
+
+# - name: delete default website
+#   ansible.builtin.file:
+#     path: /usr/share/nginx/html  # No use of * (Won't delete folder)
+#     state: absent # Deleted html directory (Contains only default website)
+
+# - name: create html directory
+#   ansible.builtin.file:
+#     path: /usr/share/nginx/html
+#     state: directory # Creating html dir
+
+
+# - name: download and extract frontend code  # in backend we did seperate (download (get_url), unarchive)
+#   ansible.builtin.unarchive: # -> A file that needs to be downloaded (Both download + unarchive)
+#     src: https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
+#     dest: /usr/share/nginx/html
+#     remote_src: yes
+
+# If change in configuration then only restart, use Ansible Handlers
+- name: copy backend conf
+  ansible.builtin.template: # Copying file (backend.service) from Ansible server  --> to Remote Machine/server
+    src: expense.conf.j2 #jinja2
+    dest: /etc/nginx/default.d/expense.conf
+  notify:
+  - restart nginx #From: handlers-> main.yaml -> name
+# Re-start? We did changes in config file's (Ex: restarting our laptop/mobile when update)
+
+
+#Below code in handlers folder
+# - name: restart nginx
+#   ansible.builtin.service:
+#     name: nginx
+#     state: restarted

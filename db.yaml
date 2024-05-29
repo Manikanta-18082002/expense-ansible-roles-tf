@@ -1,0 +1,8 @@
+- name: configure DB Server
+  hosts: db
+  vars_files:
+  - credentials.yaml
+  become: yes
+  # Instead of tasks here we used roles: 
+  roles: # Go to roles folder and checks for db folder...
+  - db

@@ -1,0 +1,48 @@
+ ansible-vault create credentials.yaml
+New Vault password:
+Confirm New Vault password:
+
+cat credentials.yaml
+
+ansible-vault view credentials.yaml
+Vault password:
+mysql_root_password: ExpenseApp@1
+
+ansible-vault edit credentials.yaml
+
+
+ ansible-playbook db.yaml --ask-vault-pass
+
+ Tags
+If you have a large playbook, it may be useful to run only specific parts of it instead of running the entire playbook. You can do this with Ansible tags. Using tags to execute or skip selected tasks is a two-step process:
+Add tags to your tasks, either individually or with tag inheritance from a block, play, role, or import.
+
+Select or skip tags when you run your playbook.
+
+--tags all - run all tasks, ignore tags (default behavior)
+
+--tags tag1,tag2 - run only tasks with either the tag tag1 or the tag tag2
+
+--skip-tags tag3,tag4 - run all tasks except those with either the tag tag3 or the tag tag4
+
+--tags tagged - run only tasks with at least one tag
+
+--tags untagged - run only tasks with no tags
+
+To run tags:  ansible-playbook backend.yaml --ask-vault-pass -t deployment
+
+
+How Ansible login to AWS?
+- Create IAM user role
+- Note Access & Secrete Keys
+- Go to Super Putty --> aws configure (Provide 2 Keys)
+- aws s3 ls (To list buckets)
+
+ansible-inventory -i aws_ec2.yaml --graph (Command to connect AWS and Fetch All Instances)
+
+import the required Python library (botocore and boto3) --> pip3.9 install botocore boto3
+
+ansible-playbook -vvv -i aws_ec2.yaml -e anisble_user=ec2-user -e ansible_password=DevOps321 dynamic.yaml
+(-vvv for debugging purpose)
+
+
