@@ -42,6 +42,8 @@
 #     remote_src: yes #Saying: Un-Archive a file that is already in the remote machine
 
 - name: install npm dependencies
+  tags:
+  - deployment
   ansible.builtin.command: npm install #--> Should be installed where package.json is located (backend -> /app/)
   args:
     chdir: /app #Before npm install go to this dir and install
@@ -50,8 +52,15 @@
   ansible.builtin.template: # From templates folder (backend.service) from Ansible server  --> to Remote Machine/server
     src: backend.service.j2 #jinja2
     dest: /etc/systemd/system/backend.service
-  notify:
-  - restart systemd  # Myself created handler and restarted systemd :) -->I checked and working fine)
+
+- name: daemon reload
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Enable backend service
+  ansible.builtin.service:
+    name: backend
+    enabled: yes
 
 - name: install python mysql dependencies
   ansible.builtin.pip: 
@@ -80,4 +89,3 @@
   ansible.builtin.service:
     name: backend
     state: restarted #started (Before)
-    enabled: yes
