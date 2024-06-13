@@ -9,8 +9,16 @@
     path: "{{ app_location }}" #--> Takes /app
     state: directory
 
-- name: download and extract code
+# - name: download and extract code
+#   ansible.builtin.unarchive:
+#     src: "https://expense-builds.s3.us-east-1.amazonaws.com/expense-{{ component }}-v2.zip"
+#     dest: "{{ app_location }}"
+#     remote_src: yes  
+    
+  # TO work the code before we put in S3 but now we need to put in nexus 
+
+- name: download the artifact from nexus
   ansible.builtin.unarchive:
-    src: "https://expense-builds.s3.us-east-1.amazonaws.com/expense-{{ component }}-v2.zip"
+    src: "http://{{ nexus_url }}/repository/{{ component }}/com/expense/{{ component }}/{{ appVersion }}/{{ component }}-{{ appVersion }}.zip"
     dest: "{{ app_location }}"
-    remote_src: yes
+    remote_src: yes # Sending appVersion Dynamically from terraform --> backend-deploy --> terraform --> main.tf --> provisioner { }

@@ -41,12 +41,12 @@
 #     dest: /app
 #     remote_src: yes #Saying: Un-Archive a file that is already in the remote machine
 
-- name: install npm dependencies
-  tags:
-  - deployment
-  ansible.builtin.command: npm install #--> Should be installed where package.json is located (backend -> /app/)
-  args:
-    chdir: /app #Before npm install go to this dir and install
+# - name: install npm dependencies # Now no need this already in Nexus Artifact
+#   tags:
+#   - deployment
+#   ansible.builtin.command: npm install #--> Should be installed where package.json is located (backend -> /app/)
+#   args:
+#     chdir: /app #Before npm install go to this dir and install
 
 - name: copy backend service
   ansible.builtin.template: # From templates folder (backend.service) from Ansible server  --> to Remote Machine/server
